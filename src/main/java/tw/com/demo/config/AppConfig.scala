@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.view.InternalResourceViewResolver
 
 @Configuration
-@ComponentScan(Array("tw.com.demo.controller"))
+@ComponentScan(Array(
+  "tw.com.demo.controller",
+  "tw.com.demo.bean"
+))
 class AppConfig {
   @Bean
   def viewResolver: InternalResourceViewResolver = {
