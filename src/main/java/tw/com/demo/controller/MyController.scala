@@ -10,7 +10,7 @@ import tw.com.demo.bean.Person
 
 @Controller
 @SessionAttributes(value = Array("persons", "message"))
-class HelloController {
+class MyController {
 
 
   @GetMapping(Array("/"))
@@ -20,8 +20,8 @@ class HelloController {
   }
 
   @PostMapping
-  def doSomething(request: HttpServletRequest, model: Model, httpSession: HttpSession): String = {
-    var persons: util.ArrayList[Person] = (httpSession getAttribute "persons").asInstanceOf[util.ArrayList[Person]]
+  def doSomething(request: HttpServletRequest, model: Model): String = {
+    var persons: util.ArrayList[Person] = (request.getSession getAttribute "persons").asInstanceOf[util.ArrayList[Person]]
     val names: Array[String] = request getParameterValues "name"
     val ages: Array[String] = request getParameterValues "age"
 
@@ -34,7 +34,6 @@ class HelloController {
       val age: Int = if (idx < ages.length) ages(idx).toInt else 0
       persons add new Person(name, age)
     }
-
     model addAttribute("persons", persons)
     "index"
   }
