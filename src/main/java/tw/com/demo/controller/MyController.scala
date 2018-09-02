@@ -25,13 +25,16 @@ class MyController {
     val names: Array[String] = request getParameterValues "name"
     val ages: Array[String] = request getParameterValues "age"
 
+    if (names == null || ages == null)
+      return "index"
+
     if (persons == null) {
       persons = new util.ArrayList[Person]()
     }
 
     for (idx <- names indices) {
       val name: String = if (idx < names.length) names(idx) else null
-      val age: Int = if (idx < ages.length) ages(idx).toInt else 0
+      val age: Integer = if (idx < ages.length) ages(idx).toInt else null
       persons add new Person(name, age)
     }
     model addAttribute("persons", persons)

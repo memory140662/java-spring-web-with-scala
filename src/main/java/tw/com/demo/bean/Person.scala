@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Bean
 import scala.beans.BeanProperty
 
 @Bean
-class Person(@BeanProperty var name: String, @BeanProperty var age: Int) extends Serializable {
+class Person(@BeanProperty var name: String, @BeanProperty var age: Integer) extends Serializable {
 
 }

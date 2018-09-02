@@ -35,11 +35,13 @@
 <body>
 <h2>${message}</h2>
 <div>
-    <input type="text" name="name" placeholder="Name"/>
-    <input type="number" name="age" placeholder="Age"/>
-    <input type="button" value="Add" onclick="add()"/>
+    <form onsubmit="return false">
+        <input type="text" name="tempName" placeholder="Name"/>
+        <input type="number" name="tempAge" placeholder="Age"/>
+        <input type="submit" value="Add" onclick="add()"/>
+    </form>
 </div>
-<form action="${requestScope.contextPath}/doSomething" method="POST">
+<form action="${requestScope.contextPath}/doSomething" method="POST" onsubmit="return validate()">
     <div class="table" id="table">
         <div class="header">
             <div style="width: 50px;" class="header-cell">Seq</div>
@@ -63,8 +65,8 @@
 </body>
 <script>
     function add() {
-        var $age = document.querySelector('input[name="age"]')
-        var $name = document.querySelector('input[name="name"]')
+        var $age = document.querySelector('input[name="tempAge"]')
+        var $name = document.querySelector('input[name="tempName"]')
         if (!$age.value || !$name.value) return
         var length = document.querySelectorAll("#table > .row1,.row2").length
         var $table = document.querySelector("#table")
@@ -107,6 +109,11 @@
             }
         })
         $row.remove()
+    }
+    function validate() {
+        var $ages = document.querySelectorAll('input[name=age]')
+        var $names = document.querySelectorAll('input[name=name]')
+        return !!($ages.length && $names.length)
     }
 </script>
 <script type="text/html" id="template">
