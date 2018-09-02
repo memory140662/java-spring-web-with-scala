@@ -6,19 +6,19 @@
             display: table;
         }
 
-        .table .row {
-            display: table-row-group
-        }
-
-        .row .cell1 {
-            display: table-cell;
-            padding: .5rem;
-        }
-
-        .row .cell2 {
-            display: table-cell;
-            padding: .5rem;
+        .table .row2 {
+            display: table-row-group;
             background: ghostwhite;
+        }
+
+        .table .row1 {
+            display: table-row-group;
+        }
+
+
+        .table .cell {
+            display: table-cell;
+            padding: .5rem;
         }
 
         .table .header {
@@ -48,11 +48,11 @@
             <div style="width: 100px;" class="header-cell">Action</div>
         </div>
         <c:forEach items="${sessionScope.persons}" var="person" varStatus="vs">
-            <div class="row" id="row${vs.index + 1}">
-                <div class="cell${vs.index % 2 + 1}">${vs.index + 1}</div>
-                <div class="cell${vs.index % 2 + 1}">${person.name}</div>
-                <div class="cell${vs.index % 2 + 1}">${person.age}</div>
-                <div class="cell${vs.index % 2 + 1}"></div>
+            <div class="row${vs.index % 2 + 1}" id="row${vs.index + 1}">
+                <div class="cell">${vs.index + 1}</div>
+                <div class="cell">${person.name}</div>
+                <div class="cell">${person.age}</div>
+                <div class="cell"></div>
             </div>
         </c:forEach>
     </div>
@@ -66,17 +66,16 @@
         var $age = document.querySelector('input[name="age"]')
         var $name = document.querySelector('input[name="name"]')
         if (!$age.value || !$name.value) return
-        var length = document.querySelectorAll("#table > .row").length
+        var length = document.querySelectorAll("#table > .row1,.row2").length
         var $table = document.querySelector("#table")
         var template = document.querySelector("#template").innerHTML
         var row = document.createElement("div")
-        row.setAttribute("class", "row")
+        row.setAttribute("class", "tempRow row" + (length % 2 + 1))
         row.setAttribute("id", "row" + (length + 1))
         row.innerHTML = template.replace(/{([^\\"<>]+)}/ig, function (node, key) {
             return {
                 age: $age.value,
                 idx: length + 1,
-                num: length % 2 + 1,
                 name: $name.value,
             }[key]
         })
@@ -87,6 +86,7 @@
 
     function deleteRow(index) {
         var $seqColumn = document.querySelectorAll(".seq")
+        var $rows = document.querySelectorAll('#table > .tempRow')
         var $row = document.querySelector('#table > #row' + index)
         var $deleteSeqColumn = document.querySelector('#table > #row' + index + ' > .seq')
         $seqColumn.forEach(function(col) {
@@ -94,21 +94,32 @@
                 col.innerHTML = +col.innerHTML - 1
             }
         })
+        var flag = false
+        $rows.forEach(function(row) {
+            if (flag) {
+                var cls = row.getAttribute("class")
+                var num = +cls.replace('tempRow row', '')
+                console.log(cls, num)
+                row.setAttribute("class", 'tempRow row' + ((num === 1) ? 2 : 1))
+            }
+            if ($row === row) {
+              flag = true
+            }
+        })
         $row.remove()
-
     }
 </script>
 <script type="text/html" id="template">
-    <div class="cell{num} seq" >{idx}</div>
-    <div class="cell{num}">
+    <div class="cell seq" >{idx}</div>
+    <div class="cell">
         {name}
         <input type="hidden" name="name" value="{name}">
     </div>
-    <div class="cell{num}">
+    <div class="cell">
         {age}
         <input type="hidden" name="age" value="{age}">
     </div>
-    <div class="cell{num}">
+    <div class="cell">
         <button onclick="deleteRow({idx})" type="button">Delete</button>
     </div>
 </script>
